@@ -29,6 +29,7 @@ composer require "guilhermegonzaga/repository: 5.0.*"
 ```php
 public function first($columns = ['*'], $fail = true);
 public function find($id, $columns = ['*'], $fail = true);
+public function findBy($attribute, $value);
 public function where(array $where, $or = false);
 public function create(array $data, $force = true);
 public function update($id, array $data, $force = true);
@@ -60,11 +61,11 @@ class CategoryRepository extends Repository
     {
         return 'App\Category';
     }
-    
+
     // Optional method, global rules
     public function boot()
     {
-        $this->where('active', true);
+        $this->findBy('active', true);
         $this->orderBy('created_at', 'desc');
     }
 }
@@ -82,7 +83,7 @@ use Illuminate\Database\Eloquent\Model; // or any other type model class
 class Category extends Model
 {
     protected $table = 'categories';
-    
+
     protected $fillable = [
         'name',
         'parent_id',
@@ -153,12 +154,12 @@ Find result by multiple fields:
 ```php
 $results = $this->repository->where([
 
-    //Default condition (=) 
+    //Default condition (=)
     'user_id' => '10',
-    
+
     //Custom condition
     ['title', 'LIKE', '%search%']
-    
+
 ])->get();
 ```
 

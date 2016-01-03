@@ -125,6 +125,18 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
+     * @param string $attribute
+     * @param mixed  $value
+     * @return $this
+     */
+    public function findBy($attribute, $value)
+    {
+        $this->model = $this->model->where($attribute, $value);
+
+        return $this;
+    }
+
+    /**
      * @param array $where
      * @param bool  $or
      * @return $this

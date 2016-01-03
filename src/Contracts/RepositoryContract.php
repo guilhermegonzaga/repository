@@ -10,6 +10,8 @@ interface RepositoryContract
 
     public function find($id, $columns = ['*'], $fail = true);
 
+    public function findBy($attribute, $value);
+
     public function where(array $where, $or = false);
 
     public function create(array $data, $force = true);
