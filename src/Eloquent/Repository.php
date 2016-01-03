@@ -191,7 +191,7 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
-     * @param array|string|null $id
+     * @param mixed $id
      * @return int
      */
     public function delete($id = null)
@@ -202,7 +202,7 @@ abstract class Repository implements RepositoryContract
 
             $model = $this->model->destroy($id);
 
-        } elseif (is_string($id)) {
+        } elseif (!is_null($id)) {
 
             $model = $this->find($id)->delete();
 
