@@ -1,0 +1,26 @@
+{
+    "name": "guilhermegonzaga/repository",
+    "description": "Repository is a design pattern for Laravel 5 which is used to abstract the database layer.",
+    "keywords": ["laravel", "eloquent", "repository", "repositories", "model", "database"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Guilherme de Oliveira Gonzaga",
+            "email": "guilhermeoliveyra@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "illuminate/support": "~5.0",
+        "illuminate/database": "~5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "GuilhermeGonzaga\\Repository\\": "src/"
+        }
+    },
+    "suggest": {
+        "laracasts/presenter": "Easy view presenters in your apps."
+    },
+    "minimum-stability": "stable"
+}
