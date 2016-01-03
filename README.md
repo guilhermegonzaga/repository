@@ -212,6 +212,18 @@ $this->repository->delete([1, 2, 3]);
 $this->repository->where(['active' => true])->delete();
 ```
 
+## Other methods
+
+In addition to the methods that are available in this package, you can call any method default Model. When you call a method that does not exist in this package, automatically call the method in the Model.
+
+Ex:
+
+```php
+$results = $this->repository->orderBy('created_at', 'desc');
+$results = $this->repository->whereIn('category_id', [2, 4, 6]);
+$results = $this->repository->whereBetween('votes', [10, 100]);
+```
+
 ## Credits
 
 This package is largely inspired by <a href="https://github.com/andersao/l5-repository">this</a> great package by @andersao.
