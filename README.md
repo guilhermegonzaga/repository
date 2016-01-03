@@ -60,6 +60,13 @@ class CategoryRepository extends Repository
     {
         return 'App\Category';
     }
+    
+    // Optional method, global rules
+    public function boot()
+    {
+        $this->where('active', true);
+        $this->orderBy('created_at', 'desc');
+    }
 }
 ```
 
