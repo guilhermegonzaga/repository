@@ -12,7 +12,7 @@ interface RepositoryContract
 
     public function findBy($attribute, $value);
 
-    public function where(array $where, $or = false);
+    public function where(array $where, $boolean = 'and');
 
     public function create(array $data, $force = true);
 

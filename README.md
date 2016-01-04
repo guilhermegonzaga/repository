@@ -22,7 +22,7 @@ composer require guilhermegonzaga/repository
 public function first($columns = ['*'], $fail = true);
 public function find($id, $columns = ['*'], $fail = true);
 public function findBy($attribute, $value);
-public function where(array $where, $or = false);
+public function where(array $where, $boolean = 'and');
 public function create(array $data, $force = true);
 public function update($id, array $data, $force = true);
 public function delete($id = null);
@@ -60,6 +60,8 @@ class CategoryRepository extends Repository
         $this->findBy('active', true);
         $this->orderBy('created_at', 'desc');
     }
+
+    // Other methods
 }
 ```
 
@@ -81,6 +83,8 @@ class Category extends Model
         'parent_id',
         ...
     ];
+
+    ...
 }
 ```
 
@@ -115,8 +119,8 @@ $results = $this->repository->get();
 Find first result:
 
 ```php
-$result = $this->repository->where(['abc' => 'def'])->first(); // Fire ModelNotFoundException (firstOrFail)
-$result = $this->repository->where(['abc' => 'def'])->first(['*'], false); // Not fire ModelNotFoundException (first)
+$result = $this->repository->where([['abc', '!=', 'def']])->first(); // Fire ModelNotFoundException (firstOrFail)
+$result = $this->repository->findBy('abc', 'def')->first(['*'], false); // Not fire ModelNotFoundException (first)
 ```
 
 Find all results with pagination:
@@ -202,7 +206,7 @@ Delete entry:
 ```php
 $this->repository->delete($id);
 $this->repository->delete([1, 2, 3]);
-$this->repository->where(['active' => false])->delete();
+$this->repository->where(['active' => false])->where(['payment_failed' => true], 'or')->delete();
 ```
 
 ## Other methods

@@ -87,13 +87,13 @@ abstract class Repository implements RepositoryContract
         $this->applyBoot();
         $this->applyScopes();
 
-        $method = 'firstOrFail';
+        $method = 'first';
 
-        if (!$fail) {
-            $method = 'first';
+        if ($fail) {
+            $method = $method . 'OrFail';
         }
 
-        $result = $this->model->{$method}($columns);
+        $result = call_user_func([$this->model, $method], $columns);
 
         $this->cleanRepository();
 
@@ -111,13 +111,13 @@ abstract class Repository implements RepositoryContract
         $this->applyBoot();
         $this->applyScopes();
 
-        $method = 'findOrFail';
+        $method = 'find';
 
-        if (!$fail) {
-            $method = 'find';
+        if ($fail) {
+            $method = $method . 'OrFail';
         }
 
-        $result = $this->model->{$method}($id, $columns);
+        $result = call_user_func([$this->model, $method], $id, $columns);
 
         $this->cleanRepository();
 
@@ -131,32 +131,30 @@ abstract class Repository implements RepositoryContract
      */
     public function findBy($attribute, $value)
     {
-        $this->model = $this->model->where($attribute, $value);
+        $this->model = $this->model->where($attribute, '=', $value);
 
         return $this;
     }
 
     /**
-     * @param array $where
-     * @param bool  $or
+     * @param array  $where
+     * @param string $boolean
      * @return $this
      */
-    public function where(array $where, $or = false)
+    public function where(array $where, $boolean = 'and')
     {
-        $method = 'where';
-
-        if ($or) {
-            $method = 'orWhere';
-        }
-
         foreach ($where as $k => $v) {
 
             if (is_array($v)) {
-                $this->model = $this->model->{$method}($v[0], $v[1], $v[2]);
+
+                list($fild, $condition, $value) = $v;
+
             } else {
-                $this->model = $this->model->{$method}($k, $v);
+
+                list($fild, $condition, $value) = [$k, '=', $v];
             }
 
+            $this->model = $this->model->where($fild, $condition, $value, $boolean);
         }
 
         return $this;
@@ -310,7 +308,7 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
-     *
+     * @return void
      */
     protected function applyBoot()
     {
@@ -320,7 +318,7 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
-     *
+     * @return void
      */
     protected function applyScopes()
     {
