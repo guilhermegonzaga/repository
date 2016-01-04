@@ -169,7 +169,7 @@ abstract class Repository implements RepositoryContract
     public function create(array $data, $force = true)
     {
         if ($force) {
-            $model = $this->model->newInstance($data)->save();
+            $model = $this->model->forceCreate($data);
         } else {
             $model = $this->model->create($data);
         }
@@ -190,7 +190,7 @@ abstract class Repository implements RepositoryContract
         $model = $this->find($id);
 
         if ($force) {
-            $model = $model->fill($data)->save();
+            $model = $model->forceFill($data)->save();
         } else {
             $model = $model->update($data);
         }
