@@ -8,20 +8,12 @@ It makes your application easier to be maintained.
 
 ## Installation
 
-#### Laravel 5.1 and 5.2
+#### Laravel (5.0, 5.1 and 5.2)
 
-Run the following command from you terminal:
-
-```terminal
-composer require "guilhermegonzaga/repository: 5.2.*"
-```
-
-#### Laravel 5.0
-
-Run the following command from you terminal:
+Execute the following command to get the latest version of the package:
 
 ```terminal
-composer require "guilhermegonzaga/repository: 5.0.*"
+composer require guilhermegonzaga/repository
 ```
 
 ## Methods
@@ -158,7 +150,7 @@ $results = $this->repository->where([
     'user_id' => '10',
 
     //Custom condition
-    ['title', 'LIKE', '%search%']
+    ['price', '>=', '9.90']
 
 ])->get();
 ```
@@ -210,7 +202,7 @@ Delete entry:
 ```php
 $this->repository->delete($id);
 $this->repository->delete([1, 2, 3]);
-$this->repository->where(['active' => true])->delete();
+$this->repository->where(['active' => false])->delete();
 ```
 
 ## Other methods
