@@ -212,9 +212,9 @@ In addition to the methods that are available in this package, you can call any 
 Ex:
 
 ```php
-$results = $this->repository->orderBy('created_at', 'desc');
-$results = $this->repository->whereIn('category_id', [2, 4, 6]);
-$results = $this->repository->whereBetween('votes', [10, 100]);
+$results = $this->repository->orderBy('created_at', 'desc')->get();
+$results = $this->repository->whereIn('category_id', [2, 4, 6])->all();
+$results = $this->repository->whereBetween('votes', [10, 100])->get();
 ```
 
 ## Credits
