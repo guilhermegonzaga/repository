@@ -169,8 +169,8 @@ $results = $this->repository->scopes(['scope1', 'scope2'])->get();
 Find all using custom scope:
 
 ```php
-$results = $this->repository->scopes(function($query) {
-    return $query->orderBy('created_at', 'desc');
+$results = $this->repository->scopes(function($repository) {
+    $repository->orderBy('created_at', 'desc');
 })->all();
 ```
 

@@ -330,7 +330,7 @@ abstract class Repository implements RepositoryContract
 
                 if ($scope instanceof Closure) {
 
-                    $this->model = $scope($this->model);
+                    call_user_func($scope, $this);
 
                 } elseif (is_string($scope) and is_callable([$this->model, $scope])) {
 
