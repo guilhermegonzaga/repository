@@ -245,6 +245,21 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
+     * @return mixed
+     */
+    public function exists()
+    {
+        $this->applyBoot();
+        $this->applyScopes();
+
+        $result = $this->model->exists();
+
+        $this->cleanRepository();
+
+        return $result;
+    }
+
+    /**
      * @param int $qtd
      * @return $this
      */

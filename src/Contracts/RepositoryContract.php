@@ -22,6 +22,8 @@ interface RepositoryContract
 
     public function paginate($limit = 15, $columns = ['*'], $pageName = 'page');
 
+    public function exists();
+
     public function random($qtd = 15);
 
     public function scopes($scopes);

@@ -25,6 +25,7 @@ public function create(array $data, $force = true);
 public function update($id, array $data, $force = true);
 public function delete($id = null);
 public function paginate($limit = 15, $columns = ['*'], $pageName = 'page');
+public function exists();
 public function random($qtd = 15);
 public function scopes($scopes);
 public function with($relations);
