@@ -4,11 +4,9 @@ Repository is a design pattern for Laravel 5 which is used to abstract the datab
 <br>
 It makes your application easier to be maintained.
 
-##### Important: This package is still being tested, use with caution.
-
 ## Installation
 
-#### Laravel (5.0, 5.1 and 5.2)
+#### Laravel (5.1 and 5.2)
 
 Execute the following command to get the latest version of the package:
 
@@ -51,7 +49,7 @@ class CategoryRepository extends Repository
 {
     public function model()
     {
-        return 'App\Category';
+        return \App\Category::class;
     }
 
     // Optional method, global rules
@@ -93,12 +91,12 @@ Finally, use the repository in the controller:
 ```php
 use App\Repositories\CategoryRepository;
 
-class CategoriesController extends Controller {
-
+class CategoriesController extends Controller
+{
     protected $repository;
 
-    public function __construct(CategoryRepository $repository) {
-
+    public function __construct(CategoryRepository $repository)
+    {
         $this->repository = $repository;
     }
 
@@ -129,9 +127,7 @@ Find all results with pagination:
 $results = $this->repository->paginate();
 ```
 
-Find result by id.
-<br>
-By default, if not found, triggers ModelNotFoundException:
+Find result by id:
 
 ```php
 $result = $this->repository->find($id); // Fire ModelNotFoundException (findOrFail)
