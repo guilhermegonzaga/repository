@@ -28,6 +28,7 @@ public function paginate($limit = 15, $columns = ['*'], $pageName = 'page');
 public function exists();
 public function random($qtd = 15);
 public function scopes($scopes);
+public function criteria($class, array $args = []);
 public function with($relations);
 public function withBoot();
 public function withoutBoot();
@@ -107,7 +108,8 @@ class CategoriesController extends Controller
 
 ## Usage methods
 
-Find all results:
+Find all results.
+<br>
 Methods ```all``` and ```get``` generate the same result:
 
 ```php
@@ -156,14 +158,14 @@ $results = $this->repository->where([
 ])->get();
 ```
 
-Find all using scope predefined in Model:
+Find using scope predefined in Model:
 
 ```php
 $results = $this->repository->scopes('scopeName')->get();
 $results = $this->repository->scopes(['scope1', 'scope2'])->get();
 ```
 
-Find all using custom scope:
+Find using custom scope:
 
 ```php
 $results = $this->repository->scopes(function($repository) {
@@ -204,6 +206,86 @@ Delete entry:
 $this->repository->delete($id);
 $this->repository->delete([1, 2, 3]);
 $this->repository->where(['active' => false])->where(['payment_failed' => true], 'or')->delete();
+```
+
+## Criteria
+
+This package makes it very easy to work with scopes/criteria.
+<br>
+Create classes to abstract these rules and make them reusable:
+
+```php
+namespace App\Repositories\Criteria;
+
+use GuilhermeGonzaga\Repository\Contracts\RepositoryContract as Repository;
+use GuilhermeGonzaga\Repository\Criteria\Criteria;
+
+class PopularProducts extends Criteria
+{
+    public function apply(Repository $repository)
+    {
+        $repository->where([
+            ['purchases', '>', '50']
+        ]);
+    }
+}
+```
+
+Receiving arguments:
+
+```php
+namespace App\Repositories\Criteria;
+
+use GuilhermeGonzaga\Repository\Contracts\RepositoryContract as Repository;
+use GuilhermeGonzaga\Repository\Criteria\Criteria;
+
+class ProductsByCategory extends Criteria
+{
+    protected $category;
+
+    public function __construct($category)
+    {
+        $this->category = $category;
+    }
+
+    public function apply(Repository $repository)
+    {
+        $repository->findBy('category_id', $this->category);
+    }
+}
+```
+Use the criteria in the controller:
+
+```php
+use App\Repositories\ProductRepository;
+use App\Repositories\Criteria\PopularProducts;
+use App\Repositories\Criteria\ProductsByCategory;
+use App\Repositories\Criteria\ProductsByCategories;
+
+class ProductsController extends Controller
+{
+    protected $repository;
+
+    public function __construct(ProductRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    public function index()
+    {
+        $this->repository->criteria(PopularProducts::class);
+    }
+
+    public function showByCategory($category)
+    {
+        $this->repository->criteria(ProductsByCategory::class, [$category]);
+    }
+
+    public function showByCategories($category1, $category2)
+    {
+        $this->repository->criteria(ProductsByCategories::class, [$category1, $category2]);
+    }
+}
 ```
 
 ## Other methods

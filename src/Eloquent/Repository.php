@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Support\Collection;
 use Illuminate\Container\Container as App;
 use GuilhermeGonzaga\Repository\Contracts\RepositoryContract;
+use GuilhermeGonzaga\Repository\Contracts\CriteriaContract;
 use GuilhermeGonzaga\Repository\Exceptions\RepositoryException;
 
 abstract class Repository implements RepositoryContract
@@ -24,6 +25,11 @@ abstract class Repository implements RepositoryContract
      * @var \Illuminate\Support\Collection
      */
     protected $scopes;
+
+    /**
+     * @var \Illuminate\Support\Collection
+     */
+    protected $criteria;
 
     /**
      * @var bool
@@ -60,11 +66,29 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
+     * @param       $class
+     * @param array $args
+     * @return mixed
+     * @throws RepositoryException
+     */
+    protected function makeCriteria($class, array $args)
+    {
+        $criteria = $this->app->make($class, $args);
+
+        if (!$criteria instanceof CriteriaContract) {
+            throw new RepositoryException("Class {$class} must be an instance of GuilhermeGonzaga\\Repository\\Criteria\\Criteria");
+        }
+
+        return $criteria;
+    }
+
+    /**
      * @throws RepositoryException
      */
     protected function cleanRepository()
     {
         $this->scopes = new Collection();
+        $this->criteria = new Collection();
         $this->withBoot();
         $this->makeModel();
     }
@@ -78,6 +102,14 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function getCriteria()
+    {
+        return $this->criteria;
+    }
+
+    /**
      * @param array $columns
      * @param bool  $fail
      * @return mixed
@@ -86,6 +118,7 @@ abstract class Repository implements RepositoryContract
     {
         $this->applyBoot();
         $this->applyScopes();
+        $this->applyCriteria();
 
         $method = 'first';
 
@@ -110,6 +143,7 @@ abstract class Repository implements RepositoryContract
     {
         $this->applyBoot();
         $this->applyScopes();
+        $this->applyCriteria();
 
         $method = 'find';
 
@@ -236,6 +270,7 @@ abstract class Repository implements RepositoryContract
     {
         $this->applyBoot();
         $this->applyScopes();
+        $this->applyCriteria();
 
         $result = $this->model->paginate($limit, $columns, $pageName);
 
@@ -251,6 +286,7 @@ abstract class Repository implements RepositoryContract
     {
         $this->applyBoot();
         $this->applyScopes();
+        $this->applyCriteria();
 
         $result = $this->model->exists();
 
@@ -287,6 +323,18 @@ abstract class Repository implements RepositoryContract
 
             $this->scopes->push($scopes);
         }
+
+        return $this;
+    }
+
+    /**
+     * @param       $class
+     * @param array $args
+     * @return $this
+     */
+    public function criteria($class, array $args = [])
+    {
+        $this->criteria->push([$class, $args]);
 
         return $this;
     }
@@ -358,6 +406,28 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
+     * @return void
+     */
+    protected function applyCriteria()
+    {
+        $criteria = $this->getCriteria();
+
+        if ($criteria->count() > 0) {
+
+            foreach ($criteria as $c) {
+
+                list($class, $args) = $c;
+
+                $object = $this->makeCriteria($class, $args);
+
+                call_user_func([$object, 'apply'], $this);
+
+            }
+
+        }
+    }
+
+    /**
      * @param array $columns
      * @return mixed
      */
@@ -374,6 +444,7 @@ abstract class Repository implements RepositoryContract
     {
         $this->applyBoot();
         $this->applyScopes();
+        $this->applyCriteria();
 
         if ($this->model instanceof \Illuminate\Database\Eloquent\Builder) {
             $results = $this->model->get($columns);

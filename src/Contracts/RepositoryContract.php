@@ -6,6 +6,8 @@ interface RepositoryContract
 {
     public function getScopes();
 
+    public function getCriteria();
+
     public function first($columns = ['*'], $fail = true);
 
     public function find($id, $columns = ['*'], $fail = true);
@@ -27,6 +29,8 @@ interface RepositoryContract
     public function random($qtd = 15);
 
     public function scopes($scopes);
+
+    public function criteria($class, array $args = []);
 
     public function with($relations);
 
