@@ -5,6 +5,7 @@ namespace GuilhermeGonzaga\Repository\Eloquent;
 use Closure;
 use Illuminate\Support\Collection;
 use Illuminate\Container\Container as App;
+use Illuminate\Database\Eloquent\Builder;
 use GuilhermeGonzaga\Repository\Contracts\RepositoryContract;
 use GuilhermeGonzaga\Repository\Contracts\CriteriaContract;
 use GuilhermeGonzaga\Repository\Exceptions\RepositoryException;
@@ -120,13 +121,9 @@ abstract class Repository implements RepositoryContract
         $this->applyScopes();
         $this->applyCriteria();
 
-        $method = 'first';
+        $method = $fail ? 'firstOrFail' : 'first';
 
-        if ($fail) {
-            $method = $method . 'OrFail';
-        }
-
-        $result = call_user_func([$this->model, $method], $columns);
+        $result = $this->model->{$method}($columns);
 
         $this->cleanRepository();
 
@@ -145,13 +142,9 @@ abstract class Repository implements RepositoryContract
         $this->applyScopes();
         $this->applyCriteria();
 
-        $method = 'find';
+        $method = $fail ? 'findOrFail' : 'find';
 
-        if ($fail) {
-            $method = $method . 'OrFail';
-        }
-
-        $result = call_user_func([$this->model, $method], $id, $columns);
+        $result = $this->model->{$method}($id, $columns);
 
         $this->cleanRepository();
 
@@ -166,7 +159,6 @@ abstract class Repository implements RepositoryContract
     public function findBy($attribute, $value)
     {
         $this->model = $this->model->where($attribute, '=', $value);
-
         return $this;
     }
 
@@ -179,14 +171,7 @@ abstract class Repository implements RepositoryContract
     {
         foreach ($where as $k => $v) {
 
-            if (is_array($v)) {
-
-                list($fild, $condition, $value) = $v;
-
-            } else {
-
-                list($fild, $condition, $value) = [$k, '=', $v];
-            }
+            list($fild, $condition, $value) = is_array($v) ? $v : [$k, '=', $v];
 
             $this->model = $this->model->where($fild, $condition, $value, $boolean);
         }
@@ -202,11 +187,7 @@ abstract class Repository implements RepositoryContract
      */
     public function create(array $data, $force = true)
     {
-        if ($force) {
-            $model = $this->model->forceCreate($data);
-        } else {
-            $model = $this->model->create($data);
-        }
+        $model = $force ? $this->model->forceCreate($data) : $this->model->create($data);
 
         $this->cleanRepository();
 
@@ -223,11 +204,7 @@ abstract class Repository implements RepositoryContract
     {
         $model = $this->find($id);
 
-        if ($force) {
-            $model = $model->forceFill($data)->save();
-        } else {
-            $model = $model->update($data);
-        }
+        $model = $force ? $model->forceFill($data)->save() : $model->update($data);
 
         $this->cleanRepository();
 
@@ -250,7 +227,7 @@ abstract class Repository implements RepositoryContract
 
             $model = $this->find($id)->delete();
 
-        } elseif ($this->model instanceof \Illuminate\Database\Eloquent\Builder) {
+        } elseif ($this->model instanceof Builder) {
 
             $model = $this->first()->delete();
         }
@@ -302,7 +279,6 @@ abstract class Repository implements RepositoryContract
     public function random($qtd = 15)
     {
         $this->model = $this->model->orderByRaw('RAND()')->take($qtd);
-
         return $this;
     }
 
@@ -335,7 +311,6 @@ abstract class Repository implements RepositoryContract
     public function criteria($class, array $args = [])
     {
         $this->criteria->push([$class, $args]);
-
         return $this;
     }
 
@@ -346,7 +321,6 @@ abstract class Repository implements RepositoryContract
     public function with($relations)
     {
         $this->model = $this->model->with($relations);
-
         return $this;
     }
 
@@ -356,7 +330,6 @@ abstract class Repository implements RepositoryContract
     public function withBoot()
     {
         $this->boot = true;
-
         return $this;
     }
 
@@ -366,7 +339,6 @@ abstract class Repository implements RepositoryContract
     public function withoutBoot()
     {
         $this->boot = false;
-
         return $this;
     }
 
@@ -393,15 +365,13 @@ abstract class Repository implements RepositoryContract
 
                 if ($scope instanceof Closure) {
 
-                    call_user_func($scope, $this);
+                    $scope($this);
 
                 } elseif (is_string($scope) and is_callable([$this->model, $scope])) {
 
-                    $this->model = call_user_func([$this->model, $scope], $this->model);
+                    $this->model = $this->model->{$scope}($this->model);
                 }
-
             }
-
         }
     }
 
@@ -419,11 +389,8 @@ abstract class Repository implements RepositoryContract
                 list($class, $args) = $c;
 
                 $object = $this->makeCriteria($class, $args);
-
-                call_user_func([$object, 'apply'], $this);
-
+                $object->apply($this);
             }
-
         }
     }
 
@@ -446,7 +413,7 @@ abstract class Repository implements RepositoryContract
         $this->applyScopes();
         $this->applyCriteria();
 
-        if ($this->model instanceof \Illuminate\Database\Eloquent\Builder) {
+        if ($this->model instanceof Builder) {
             $results = $this->model->get($columns);
         } else {
             $results = $this->model->all($columns);
@@ -469,8 +436,7 @@ abstract class Repository implements RepositoryContract
 
             $result = call_user_func_array([$this->model, $method], $arguments);
 
-            if (!$result instanceof \Illuminate\Database\Eloquent\Builder) {
-
+            if (!$result instanceof Builder) {
                 throw new RepositoryException("Method {$method} can not be called in " . get_class($this));
             }
 
