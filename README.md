@@ -1,5 +1,7 @@
 # Laravel Repositories
 
+[![Latest Stable Version](https://poser.pugx.org/guilhermegonzaga/repository/v/stable)](https://packagist.org/packages/guilhermegonzaga/repository) [![Total Downloads](https://poser.pugx.org/guilhermegonzaga/repository/downloads)](https://packagist.org/packages/guilhermegonzaga/repository) [![Latest Unstable Version](https://poser.pugx.org/guilhermegonzaga/repository/v/unstable)](https://packagist.org/packages/guilhermegonzaga/repository) [![License](https://poser.pugx.org/guilhermegonzaga/repository/license)](https://packagist.org/packages/guilhermegonzaga/repository)
+
 Repository is a design pattern for Laravel 5 which is used to abstract the database layer.
 <br>
 It makes your application easier to be maintained.
