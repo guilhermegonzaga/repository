@@ -171,9 +171,9 @@ abstract class Repository implements RepositoryContract
     {
         foreach ($where as $k => $v) {
 
-            list($fild, $condition, $value) = is_array($v) ? $v : [$k, '=', $v];
+            list($field, $condition, $value) = is_array($v) ? $v : [$k, '=', $v];
 
-            $this->model = $this->model->where($fild, $condition, $value, $boolean);
+            $this->model = $this->model->where($field, $condition, $value, $boolean);
         }
 
         return $this;
