@@ -49,7 +49,7 @@ abstract class Repository implements RepositoryContract
     /**
      * @return mixed
      */
-    abstract function model();
+    abstract public function model();
 
     /**
      * @return \Illuminate\Database\Eloquent\Model
