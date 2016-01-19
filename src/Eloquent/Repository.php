@@ -59,7 +59,7 @@ abstract class Repository implements RepositoryContract
     {
         $model = $this->app->make($this->model());
 
-        if (!$model instanceof \Illuminate\Database\Eloquent\Model) {
+        if (! $model instanceof \Illuminate\Database\Eloquent\Model) {
             throw new RepositoryException("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
         }
 
@@ -76,7 +76,7 @@ abstract class Repository implements RepositoryContract
     {
         $criteria = $this->app->make($class, $args);
 
-        if (!$criteria instanceof CriteriaContract) {
+        if (! $criteria instanceof CriteriaContract) {
             throw new RepositoryException("Class {$class} must be an instance of GuilhermeGonzaga\\Repository\\Criteria\\Criteria");
         }
 
@@ -159,6 +159,7 @@ abstract class Repository implements RepositoryContract
     public function findBy($attribute, $value)
     {
         $this->model = $this->model->where($attribute, '=', $value);
+
         return $this;
     }
 
@@ -170,7 +171,6 @@ abstract class Repository implements RepositoryContract
     public function where(array $where, $boolean = 'and')
     {
         foreach ($where as $k => $v) {
-
             list($field, $condition, $value) = is_array($v) ? $v : [$k, '=', $v];
 
             $this->model = $this->model->where($field, $condition, $value, $boolean);
@@ -220,15 +220,10 @@ abstract class Repository implements RepositoryContract
         $model = null;
 
         if (is_array($id)) {
-
             $model = $this->model->destroy($id);
-
-        } elseif (!is_null($id)) {
-
+        } elseif (! is_null($id)) {
             $model = $this->find($id)->delete();
-
         } elseif ($this->model instanceof Builder) {
-
             $model = $this->first()->delete();
         }
 
@@ -279,6 +274,7 @@ abstract class Repository implements RepositoryContract
     public function random($qtd = 15)
     {
         $this->model = $this->model->orderByRaw('RAND()')->take($qtd);
+
         return $this;
     }
 
@@ -289,14 +285,10 @@ abstract class Repository implements RepositoryContract
     public function scopes($scopes)
     {
         if (is_array($scopes)) {
-
             foreach ($scopes as $scope) {
-
                 $this->scopes->push($scope);
             }
-
         } else {
-
             $this->scopes->push($scopes);
         }
 
@@ -311,6 +303,7 @@ abstract class Repository implements RepositoryContract
     public function criteria($class, array $args = [])
     {
         $this->criteria->push([$class, $args]);
+
         return $this;
     }
 
@@ -321,6 +314,7 @@ abstract class Repository implements RepositoryContract
     public function with($relations)
     {
         $this->model = $this->model->with($relations);
+
         return $this;
     }
 
@@ -330,6 +324,7 @@ abstract class Repository implements RepositoryContract
     public function withBoot()
     {
         $this->boot = true;
+
         return $this;
     }
 
@@ -339,6 +334,7 @@ abstract class Repository implements RepositoryContract
     public function withoutBoot()
     {
         $this->boot = false;
+
         return $this;
     }
 
@@ -360,15 +356,10 @@ abstract class Repository implements RepositoryContract
         $scopes = $this->getScopes();
 
         if ($scopes->count() > 0) {
-
             foreach ($scopes as $scope) {
-
                 if ($scope instanceof Closure) {
-
                     $scope($this);
-
                 } elseif (is_string($scope) and is_callable([$this->model, $scope])) {
-
                     $this->model = $this->model->{$scope}($this->model);
                 }
             }
@@ -383,9 +374,7 @@ abstract class Repository implements RepositoryContract
         $criteria = $this->getCriteria();
 
         if ($criteria->count() > 0) {
-
             foreach ($criteria as $c) {
-
                 list($class, $args) = $c;
 
                 $object = $this->makeCriteria($class, $args);
@@ -433,17 +422,14 @@ abstract class Repository implements RepositoryContract
     public function __call($method, $arguments)
     {
         if (is_callable([$this->model, $method])) {
-
             $result = call_user_func_array([$this->model, $method], $arguments);
 
-            if (!$result instanceof Builder) {
-                throw new RepositoryException("Method {$method} can not be called in " . get_class($this));
+            if (! $result instanceof Builder) {
+                throw new RepositoryException("Method {$method} can not be called in ".get_class($this));
             }
 
             $this->model = $result;
-
         } else {
-
             throw new RepositoryException("Method {$method} not exists in {$this->model()}");
         }
 
