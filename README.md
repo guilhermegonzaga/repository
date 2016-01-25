@@ -29,7 +29,7 @@ public function delete($id = null);
 public function paginate($limit = 15, $columns = ['*'], $pageName = 'page');
 public function exists();
 public function random($qtd = 15);
-public function scopes($scopes);
+public function scopes(Closure $scope, $boolean = 'and');
 public function criteria($class, array $args = []);
 public function with($relations);
 public function withBoot();
@@ -161,25 +161,20 @@ $results = $this->repository->where([
 ])->get();
 ```
 
-Find using scope predefined in Model:
+Find using custom scope (nested):
 
 ```php
-$results = $this->repository->scopes('scopeName')->get();
-$results = $this->repository->scopes(['scope1', 'scope2'])->get();
-```
-
-Find using custom scope:
-
-```php
-$results = $this->repository->scopes(function ($repository) {
-    $repository->orderBy('created_at', 'desc');
+$results = $this->repository->scopes(function ($query) {
+    $query->whereDate('birth_date', '=', Carbon::now()->toDateString());
+    $query->whereActive(true);
 })->all();
 ```
 
 Get random results:
 
 ```php
-$results = $this->repository->scopes('popular')->random()->get();
+$results = $this->repository->whereFeatured(true)->scopes(function ($query) { ... }, 'or')->random()->get();
+$results = $this->repository->whereNull('discount')->random(10)->get();
 ```
 
 Enable/disable ```boot()``` method in repository:

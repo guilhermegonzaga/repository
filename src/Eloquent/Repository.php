@@ -283,18 +283,13 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
-     * @param Closure|string|array $scopes
+     * @param Closure $scope
+     * @param string $boolean
      * @return $this
      */
-    public function scopes($scopes)
+    public function scopes(Closure $scope, $boolean = 'and')
     {
-        if (is_array($scopes)) {
-            foreach ($scopes as $scope) {
-                $this->scopes->push($scope);
-            }
-        } else {
-            $this->scopes->push($scopes);
-        }
+        $this->scopes->push([$scope, $boolean]);
 
         return $this;
     }
@@ -361,10 +356,10 @@ abstract class Repository implements RepositoryContract
 
         if ($scopes->count() > 0) {
             foreach ($scopes as $scope) {
-                if ($scope instanceof Closure) {
-                    $scope($this);
-                } elseif (is_string($scope) and is_callable([$this->model, $scope])) {
-                    $this->model = $this->model->{$scope}($this->model);
+                list($closure, $boolean) = $scope;
+
+                if ($closure instanceof Closure) {
+                    $this->whereNested($closure, $boolean);
                 }
             }
         }
