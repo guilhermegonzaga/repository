@@ -18,7 +18,7 @@ interface RepositoryContract
 
     public function create(array $data, $force = true);
 
-    public function update($id, array $data, $force = true);
+    public function update(array $data, $id = null, $force = true);
 
     public function delete($id = null);
 

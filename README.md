@@ -24,7 +24,7 @@ public function find($id, $columns = ['*'], $fail = true);
 public function findBy($attribute, $value);
 public function where(array $where, $boolean = 'and');
 public function create(array $data, $force = true);
-public function update($id, array $data, $force = true);
+public function update(array $data, $id = null, $force = true);
 public function delete($id = null);
 public function paginate($limit = 15, $columns = ['*'], $pageName = 'page');
 public function exists();
@@ -198,8 +198,9 @@ $result = $this->repository->create(Input::all(), false); // with $fillable
 Update entry:
 
 ```php
-$result = $this->repository->update($id, Input::all()); // without $fillable
-$result = $this->repository->update($id, Input::all(), false); // with $fillable
+$result = $this->repository->update(Input::all(), $id); // without $fillable
+$result = $this->repository->update(Input::all(), $id, false); // with $fillable
+$result = $this->repository->whereName('test')->update(Input::all()); // update first result
 ```
 
 Delete entry:

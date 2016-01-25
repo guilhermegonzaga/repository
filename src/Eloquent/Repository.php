@@ -195,14 +195,18 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
-     * @param       $id
      * @param array $data
-     * @param bool  $force
+     * @param int|null $id
+     * @param bool $force
      * @return mixed
      */
-    public function update($id, array $data, $force = true)
+    public function update(array $data, $id = null, $force = true)
     {
-        $model = $this->find($id);
+        if (is_null($id) and $this->model instanceof Builder) {
+            $model = $this->first();
+        } else {
+            $model = $this->find($id);
+        }
 
         $model = $force ? $model->forceFill($data)->save() : $model->update($data);
 
