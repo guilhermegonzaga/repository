@@ -130,6 +130,7 @@ Find all results with pagination:
 
 ```php
 $results = $this->repository->paginate();
+$results = $this->repository->paginate(10);
 ```
 
 Find result by id:
@@ -170,7 +171,7 @@ $results = $this->repository->scopes(['scope1', 'scope2'])->get();
 Find using custom scope:
 
 ```php
-$results = $this->repository->scopes(function($repository) {
+$results = $this->repository->scopes(function ($repository) {
     $repository->orderBy('created_at', 'desc');
 })->all();
 ```
@@ -200,7 +201,7 @@ Update entry:
 ```php
 $result = $this->repository->update(Input::all(), $id); // without $fillable
 $result = $this->repository->update(Input::all(), $id, false); // with $fillable
-$result = $this->repository->whereName('test')->update(Input::all()); // update first result
+$result = $this->repository->whereFieldName('test')->update(Input::all()); // update first result
 ```
 
 Delete entry:
@@ -208,7 +209,7 @@ Delete entry:
 ```php
 $this->repository->delete($id);
 $this->repository->delete([1, 2, 3]);
-$this->repository->where(['active' => false])->where(['payment_failed' => true], 'or')->delete();
+$this->repository->whereActive(false)->where(['payment_failed' => true], 'or')->delete();
 ```
 
 ## Criteria
@@ -301,6 +302,7 @@ Ex:
 $results = $this->repository->orderBy('created_at', 'desc')->get();
 $results = $this->repository->whereIn('category_id', [2, 4, 6])->all();
 $results = $this->repository->whereBetween('votes', [10, 100])->get();
+$results = $this->repository->whereFieldName('test')->get();
 ```
 
 ## Credits
