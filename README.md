@@ -74,7 +74,7 @@ Create your model:
 ```php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model; // or any other type model class
+use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
@@ -110,13 +110,9 @@ class CategoriesController extends Controller
 
 ## Usage methods
 
-Find all results.
-<br>
-Methods ```all``` and ```get``` generate the same result:
-
+Find all results:
 ```php
 $results = $this->repository->all();
-$results = $this->repository->get();
 ```
 
 Find first result:
@@ -167,7 +163,7 @@ Find using custom scope (nested):
 $results = $this->repository->scopes(function ($query) {
     $query->whereDate('birth_date', '=', Carbon::now()->toDateString());
     $query->whereActive(true);
-})->all();
+})->get();
 ```
 
 Get random results:
@@ -272,30 +268,34 @@ class ProductsController extends Controller
 
     public function index()
     {
-        $this->repository->criteria(PopularProducts::class);
+        $this->repository->criteria(PopularProducts::class)->get();
     }
 
     public function showByCategory($category)
     {
-        $this->repository->criteria(ProductsByCategory::class, [$category]);
+        $this->repository->criteria(ProductsByCategory::class, [$category])->get();
     }
 
     public function showByCategories($category1, $category2)
     {
-        $this->repository->criteria(ProductsByCategories::class, [$category1, $category2]);
+        $this->repository->criteria(ProductsByCategories::class, [
+            $category1,
+            $category2,
+            $category3
+        ])->get();
     }
 }
 ```
 
 ## Other methods
 
-In addition to the methods that are available in this package, you can call any method default Model. When you call a method that does not exist in this package, automatically call the method in the Model.
+In addition to the methods that are available in this package, you can call any method in default of Eloquent Builder. When you call a method that does not exist in this package, it's automatically called on Eloquent Builder.
 
 Ex:
 
 ```php
 $results = $this->repository->orderBy('created_at', 'desc')->get();
-$results = $this->repository->whereIn('category_id', [2, 4, 6])->all();
+$results = $this->repository->whereIn('category_id', [2, 4, 6])->get();
 $results = $this->repository->whereBetween('votes', [10, 100])->get();
 $results = $this->repository->whereFieldName('test')->get();
 ```
