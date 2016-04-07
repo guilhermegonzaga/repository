@@ -422,12 +422,12 @@ abstract class Repository implements RepositoryContract
             $result = call_user_func_array([$this->model, $method], $arguments);
 
             if (! $result instanceof Builder) {
-                throw new RepositoryException("Method {$method} can not be called in ".get_class($this));
+                throw new RepositoryException("Method '{$method}' can't be called in ".get_class($this));
             }
 
             $this->model = $result;
         } else {
-            throw new RepositoryException("Method {$method} not exists in {$this->model()}");
+            throw new RepositoryException("Method '{$method}' not exists in {$this->model()}");
         }
 
         return $this;
