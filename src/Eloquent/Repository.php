@@ -358,9 +358,7 @@ abstract class Repository implements RepositoryContract
             foreach ($scopes as $scope) {
                 list($closure, $boolean) = $scope;
 
-                if ($closure instanceof Closure) {
-                    $this->whereNested($closure, $boolean);
-                }
+                $this->whereNested($closure, $boolean);
             }
         }
     }
