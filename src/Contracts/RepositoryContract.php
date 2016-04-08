@@ -24,7 +24,7 @@ interface RepositoryContract
 
     public function exists();
 
-    public function scopes(\Closure $scope, $boolean = 'and');
+    public function scope(\Closure $scope, $boolean = 'and');
 
     public function criteria($class, array $args = []);
 

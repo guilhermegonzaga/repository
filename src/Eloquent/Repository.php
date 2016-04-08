@@ -271,7 +271,7 @@ abstract class Repository implements RepositoryContract
      * @param string $boolean
      * @return $this
      */
-    public function scopes(Closure $scope, $boolean = 'and')
+    public function scope(Closure $scope, $boolean = 'and')
     {
         $this->scopes->push([$scope, $boolean]);
 
