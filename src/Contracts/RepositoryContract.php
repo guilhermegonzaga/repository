@@ -16,9 +16,9 @@ interface RepositoryContract
 
     public function where(array $where, $boolean = 'and');
 
-    public function create(array $data, $force = true);
+    public function create(array $data, $force = false);
 
-    public function update(array $data, $id = null, $force = true);
+    public function update(array $data, $id = null, $force = false);
 
     public function delete($id = null);
 

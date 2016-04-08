@@ -185,7 +185,7 @@ abstract class Repository implements RepositoryContract
      * @return mixed
      * @throws RepositoryException
      */
-    public function create(array $data, $force = true)
+    public function create(array $data, $force = false)
     {
         $model = $force ? $this->model->forceCreate($data) : $this->model->create($data);
 
@@ -200,7 +200,7 @@ abstract class Repository implements RepositoryContract
      * @param bool $force
      * @return mixed
      */
-    public function update(array $data, $id = null, $force = true)
+    public function update(array $data, $id = null, $force = false)
     {
         if (is_null($id) and $this->model instanceof Builder) {
             $model = $this->first();
