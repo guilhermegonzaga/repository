@@ -5,6 +5,7 @@ namespace Laracodes\Repository\Eloquent;
 use Closure;
 use Illuminate\Support\Collection;
 use Illuminate\Container\Container as App;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Laracodes\Repository\Contracts\RepositoryContract;
 use Laracodes\Repository\Contracts\CriteriaContract;
@@ -59,8 +60,8 @@ abstract class Repository implements RepositoryContract
     {
         $model = $this->app->make($this->model());
 
-        if (! $model instanceof \Illuminate\Database\Eloquent\Model) {
-            throw new RepositoryException("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
+        if (! $model instanceof Model) {
+            throw new RepositoryException("Class {$this->model()} must be an instance of " . Model::class);
         }
 
         return $this->model = $model;
@@ -77,7 +78,7 @@ abstract class Repository implements RepositoryContract
         $criteria = $this->app->make($class, $args);
 
         if (! $criteria instanceof CriteriaContract) {
-            throw new RepositoryException("Class {$class} must be an instance of Laracodes\\Repository\\Criteria\\Criteria");
+            throw new RepositoryException("Class {$class} must be an instance of " . CriteriaContract::class);
         }
 
         return $criteria;
