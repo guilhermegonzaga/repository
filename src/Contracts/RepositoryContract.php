@@ -24,6 +24,8 @@ interface RepositoryContract
 
     public function exists();
 
+    public function pluck($column, $key = null);
+
     public function scope(\Closure $scope, $boolean = 'and');
 
     public function criteria($class, array $args = []);

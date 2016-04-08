@@ -268,6 +268,24 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
+     * @param $column
+     * @param null $key
+     * @return mixed
+     */
+    public function pluck($column, $key = null)
+    {
+        $this->applyBoot();
+        $this->applyScopes();
+        $this->applyCriteria();
+
+        $result = $this->model->pluck($column, $key);
+
+        $this->cleanRepository();
+
+        return $result;
+    }
+
+    /**
      * @param Closure $scope
      * @param string $boolean
      * @return $this
