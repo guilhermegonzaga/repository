@@ -1,14 +1,14 @@
 <?php
 
-namespace GuilhermeGonzaga\Repository\Eloquent;
+namespace Laracodes\Repository\Eloquent;
 
 use Closure;
 use Illuminate\Support\Collection;
 use Illuminate\Container\Container as App;
 use Illuminate\Database\Eloquent\Builder;
-use GuilhermeGonzaga\Repository\Contracts\RepositoryContract;
-use GuilhermeGonzaga\Repository\Contracts\CriteriaContract;
-use GuilhermeGonzaga\Repository\Exceptions\RepositoryException;
+use Laracodes\Repository\Contracts\RepositoryContract;
+use Laracodes\Repository\Contracts\CriteriaContract;
+use Laracodes\Repository\Exceptions\RepositoryException;
 
 abstract class Repository implements RepositoryContract
 {
@@ -77,7 +77,7 @@ abstract class Repository implements RepositoryContract
         $criteria = $this->app->make($class, $args);
 
         if (! $criteria instanceof CriteriaContract) {
-            throw new RepositoryException("Class {$class} must be an instance of GuilhermeGonzaga\\Repository\\Criteria\\Criteria");
+            throw new RepositoryException("Class {$class} must be an instance of Laracodes\\Repository\\Criteria\\Criteria");
         }
 
         return $criteria;

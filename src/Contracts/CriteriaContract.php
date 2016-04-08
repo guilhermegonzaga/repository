@@ -1,6 +1,6 @@
 <?php
 
-namespace GuilhermeGonzaga\Repository\Contracts;
+namespace Laracodes\Repository\Contracts;
 
 interface CriteriaContract
 {

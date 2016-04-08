@@ -1,9 +1,9 @@
 <?php
 
-namespace GuilhermeGonzaga\Repository\Criteria;
+namespace Laracodes\Repository\Criteria;
 
-use GuilhermeGonzaga\Repository\Contracts\CriteriaContract;
-use GuilhermeGonzaga\Repository\Contracts\RepositoryContract;
+use Laracodes\Repository\Contracts\CriteriaContract;
+use Laracodes\Repository\Contracts\RepositoryContract;
 
 abstract class Criteria implements CriteriaContract
 {

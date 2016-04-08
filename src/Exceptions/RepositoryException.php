@@ -1,6 +1,6 @@
 <?php
 
-namespace GuilhermeGonzaga\Repository\Exceptions;
+namespace Laracodes\Repository\Exceptions;
 
 class RepositoryException extends \Exception
 {
