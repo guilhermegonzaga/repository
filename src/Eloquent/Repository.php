@@ -272,17 +272,6 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
-     * @param int $qtd
-     * @return $this
-     */
-    public function random($qtd = 15)
-    {
-        $this->model = $this->model->orderByRaw('RAND()')->take($qtd);
-
-        return $this;
-    }
-
-    /**
      * @param Closure $scope
      * @param string $boolean
      * @return $this

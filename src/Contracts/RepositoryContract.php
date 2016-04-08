@@ -26,8 +26,6 @@ interface RepositoryContract
 
     public function exists();
 
-    public function random($qtd = 15);
-
     public function scopes(\Closure $scope, $boolean = 'and');
 
     public function criteria($class, array $args = []);
