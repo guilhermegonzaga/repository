@@ -90,7 +90,7 @@ abstract class Repository implements RepositoryContract
     {
         $this->scopes = new Collection();
         $this->criteria = new Collection();
-        $this->withBoot();
+        $this->setBoot();
         $this->makeModel();
     }
 
@@ -108,6 +108,17 @@ abstract class Repository implements RepositoryContract
     public function getCriteria()
     {
         return $this->criteria;
+    }
+
+    /**
+     * @param bool $boot
+     * @return $this
+     */
+    public function setBoot($boot = true)
+    {
+        $this->boot = $boot;
+
+        return $this;
     }
 
     /**
@@ -302,26 +313,6 @@ abstract class Repository implements RepositoryContract
     public function with($relations)
     {
         $this->model = $this->model->with($relations);
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function withBoot()
-    {
-        $this->boot = true;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function withoutBoot()
-    {
-        $this->boot = false;
 
         return $this;
     }

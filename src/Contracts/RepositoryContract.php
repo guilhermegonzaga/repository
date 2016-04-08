@@ -8,6 +8,8 @@ interface RepositoryContract
 
     public function getCriteria();
 
+    public function setBoot($boot = true);
+
     public function first($columns = ['*'], $fail = true);
 
     public function find($id, $columns = ['*'], $fail = true);
@@ -31,10 +33,6 @@ interface RepositoryContract
     public function criteria($class, array $args = []);
 
     public function with($relations);
-
-    public function withBoot();
-
-    public function withoutBoot();
 
     public function all($columns = ['*']);
 
