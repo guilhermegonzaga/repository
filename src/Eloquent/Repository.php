@@ -95,22 +95,6 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function getScopes()
-    {
-        return $this->scopes;
-    }
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function getCriteria()
-    {
-        return $this->criteria;
-    }
-
-    /**
      * @param bool $boot
      * @return $this
      */
@@ -332,7 +316,7 @@ abstract class Repository implements RepositoryContract
      */
     protected function applyScopes()
     {
-        $scopes = $this->getScopes();
+        $scopes = $this->scopes;
 
         if ($scopes->count() > 0) {
             foreach ($scopes as $scope) {
@@ -348,7 +332,7 @@ abstract class Repository implements RepositoryContract
      */
     protected function applyCriteria()
     {
-        $criteria = $this->getCriteria();
+        $criteria = $this->criteria;
 
         if ($criteria->count() > 0) {
             foreach ($criteria as $c) {

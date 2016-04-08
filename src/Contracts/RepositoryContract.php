@@ -4,10 +4,6 @@ namespace Laracodes\Repository\Contracts;
 
 interface RepositoryContract
 {
-    public function getScopes();
-
-    public function getCriteria();
-
     public function setBoot($boot = true);
 
     public function first($columns = ['*'], $fail = true);
