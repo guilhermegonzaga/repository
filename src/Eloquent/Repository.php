@@ -61,7 +61,7 @@ abstract class Repository implements RepositoryContract
         $model = $this->app->make($this->model());
 
         if (! $model instanceof Model) {
-            throw new RepositoryException("Class {$this->model()} must be an instance of " . Model::class);
+            throw new RepositoryException("Class {$this->model()} must be an instance of ".Model::class);
         }
 
         return $this->model = $model;
@@ -78,7 +78,7 @@ abstract class Repository implements RepositoryContract
         $criteria = $this->app->make($class, $args);
 
         if (! $criteria instanceof CriteriaContract) {
-            throw new RepositoryException("Class {$class} must be an instance of " . CriteriaContract::class);
+            throw new RepositoryException("Class {$class} must be an instance of ".CriteriaContract::class);
         }
 
         return $criteria;
@@ -337,7 +337,7 @@ abstract class Repository implements RepositoryContract
     {
         $scopes = $this->scopes;
 
-        if (!$scopes->isEmpty()) {
+        if (! $scopes->isEmpty()) {
             foreach ($scopes as $scope) {
                 list($closure, $boolean) = $scope;
 
@@ -353,7 +353,7 @@ abstract class Repository implements RepositoryContract
     {
         $criteria = $this->criteria;
 
-        if (!$criteria->isEmpty()) {
+        if (! $criteria->isEmpty()) {
             foreach ($criteria as $c) {
                 list($class, $args) = $c;
 
