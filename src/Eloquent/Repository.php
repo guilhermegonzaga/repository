@@ -16,7 +16,7 @@ abstract class Repository implements RepositoryContract
     /**
      * @var \Illuminate\Container\Container
      */
-    private $app;
+    protected $app;
 
     /**
      * @var \Illuminate\Database\Eloquent\Model
@@ -319,7 +319,7 @@ abstract class Repository implements RepositoryContract
     {
         $scopes = $this->scopes;
 
-        if ($scopes->count() > 0) {
+        if (!$scopes->isEmpty()) {
             foreach ($scopes as $scope) {
                 list($closure, $boolean) = $scope;
 
@@ -335,7 +335,7 @@ abstract class Repository implements RepositoryContract
     {
         $criteria = $this->criteria;
 
-        if ($criteria->count() > 0) {
+        if (!$criteria->isEmpty()) {
             foreach ($criteria as $c) {
                 list($class, $args) = $c;
 
