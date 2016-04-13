@@ -39,6 +39,14 @@ abstract class Repository implements RepositoryContract
     protected $boot;
 
     /**
+     * @var array
+     */
+    protected $finalMethods = [
+        'findOrFail', 'firstOrFail', 'updateOrCreate', 'findMany', 'findOrNew', 'firstOrNew',
+        'firstOrCreate', 'lists', 'simplePaginate', 'increment', 'decrement'
+    ];
+
+    /**
      * @param \Illuminate\Container\Container $app
      */
     public function __construct(App $app)
@@ -364,6 +372,24 @@ abstract class Repository implements RepositoryContract
     }
 
     /**
+     * @param $method
+     * @param $arguments
+     * @return mixed
+     */
+    protected function callFinalMethods($method, $arguments)
+    {
+        $this->applyBoot();
+        $this->applyScopes();
+        $this->applyCriteria();
+
+        $result = call_user_func_array([$this->model, $method], $arguments);
+
+        $this->cleanRepository();
+
+        return $result;
+    }
+
+    /**
      * @param array $columns
      * @return mixed
      */
@@ -401,17 +427,15 @@ abstract class Repository implements RepositoryContract
      */
     public function __call($method, $arguments)
     {
-        if (is_callable([$this->model, $method])) {
-            $result = call_user_func_array([$this->model, $method], $arguments);
-
-            if (! $result instanceof Builder) {
-                throw new RepositoryException("Method '{$method}' can't be called in ".get_class($this));
-            }
-
-            $this->model = $result;
-        } else {
-            throw new RepositoryException("Method '{$method}' not exists in {$this->model()}");
+        if (! is_callable([$this->model, $method])) {
+            throw new RepositoryException("Method '{$method}' can't be called in {$this->model()}");
         }
+
+        if (array_has($this->finalMethods, $method)) {
+            return $this->callFinalMethods($method, $arguments);
+        }
+
+        $this->model = call_user_func_array([$this->model, $method], $arguments);
 
         return $this;
     }
