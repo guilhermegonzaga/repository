@@ -43,7 +43,7 @@ abstract class Repository implements RepositoryContract
      */
     protected $finalMethods = [
         'findOrFail', 'firstOrFail', 'updateOrCreate', 'findMany', 'findOrNew', 'firstOrNew',
-        'firstOrCreate', 'lists', 'simplePaginate', 'increment', 'decrement'
+        'firstOrCreate', 'lists', 'simplePaginate', 'increment', 'decrement',
     ];
 
     /**
