@@ -116,6 +116,36 @@ abstract class Repository implements RepositoryContract
 
     /**
      * @param array $columns
+     * @return mixed
+     */
+    public function all($columns = ['*'])
+    {
+        return $this->get($columns);
+    }
+
+    /**
+     * @param array $columns
+     * @return mixed
+     */
+    public function get($columns = ['*'])
+    {
+        $this->applyBoot();
+        $this->applyScopes();
+        $this->applyCriteria();
+
+        if ($this->model instanceof Builder) {
+            $results = $this->model->get($columns);
+        } else {
+            $results = $this->model->all($columns);
+        }
+
+        $this->cleanRepository();
+
+        return $results;
+    }
+
+    /**
+     * @param array $columns
      * @param bool  $fail
      * @return mixed
      */
@@ -387,36 +417,6 @@ abstract class Repository implements RepositoryContract
         $this->cleanRepository();
 
         return $result;
-    }
-
-    /**
-     * @param array $columns
-     * @return mixed
-     */
-    public function all($columns = ['*'])
-    {
-        return $this->get($columns);
-    }
-
-    /**
-     * @param array $columns
-     * @return mixed
-     */
-    public function get($columns = ['*'])
-    {
-        $this->applyBoot();
-        $this->applyScopes();
-        $this->applyCriteria();
-
-        if ($this->model instanceof Builder) {
-            $results = $this->model->get($columns);
-        } else {
-            $results = $this->model->all($columns);
-        }
-
-        $this->cleanRepository();
-
-        return $results;
     }
 
     /**
